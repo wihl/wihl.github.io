@@ -1,0 +1,412 @@
+\documentclass[10pt,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{color,graphicx,overpic}
+\usepackage{hyperref}
+
+
+\pdfinfo{
+  /Title (example.pdf)
+  /Creator (TeX)
+  /Producer (pdfTeX 1.40.0)
+  /Author (David Wihl)
+  /Subject (Cheat Sheet)
+  /Keywords (pdflatex, latex,pdftex,tex)}
+
+% This sets page margins to .5 inch if using letter paper, and to 1cm
+% if using A4 paper. (This probably isn't strictly necessary.)
+% If using another size paper, use default 1cm margins.
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+    { \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+    {\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+        {\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+        {\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+    }
+
+% Turn off header and footer
+\pagestyle{empty}
+
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+
+% Define BibTeX command
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+%My Environments
+\newtheorem{example}[section]{Example}
+% -----------------------------------------------------------------------
+
+\begin{document}
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+\setlength{\columnseprule}{1pt}
+
+\subsubsection{Normal Distribution / Z-score}
+\begin{align*}
+X \sim& \mathcal{N}(\mu,\sigma^2)\\
+Z = &\frac{X - \mu}{\sigma} \sim \mathcal{N}(0,1)\\
+X = &\sigma Z + \mu \\
+P(a \leq X \leq b) =& P[(a-\mu) \leq (X-\mu) \leq (b-\mu)]\\
+	= & P[\frac{(a-\mu)}{\sigma} \leq \frac{(X-\mu)} {\sigma} \leq \frac {(b-\mu)} {\sigma} ]\\
+	= & P[\frac{(a-\mu)}{\sigma} \leq Z \leq \frac {(b-\mu)} {\sigma} ]\\
+\end{align*}
+
+\subsubsection{Decision Analysis}
+Maximax takes the maximum of each row, and then the maximum of the resulting set. ``What is the best that can happen?" Most aggressive.
+
+Maximin takes the minimum of each row, and then the maximum of the resulting set. ``What is the worst that can happen?" Most conservative.
+
+\textit{Decision Trees} show the problem with all possible outcomes and payoffs. Squares are decision nodes. Circles are uncertain external events (probabilistic node, like a coin). Walk the tree to find which gives the best expected value. ``Fold back the tree" walking from right to left. (In CompSci, this is called a Depth First Search). Multiply the end states times the probabilities and then aggregate to one level up in the tree. At any given branch, the best path can be determined by the aggregated value of the path.
+
+Expected Monetary Value does not include utility and risk. Since it involves a predicted average over repetition, it may not be appropriate for one-off decisions. It also factors in only Monetary value so it does not take into account other objectives (e.g. environment, aesthetic, social)
+
+
+%\subsubsection{Unbiased Estimators}
+
+%\subsubsection{Sums of Normals}
+
+
+\subsubsection{Central Limit Theorem}
+\textbf{Requires} $n \geq 30$ or population be normally distributed.
+
+For a mean, a sample distribution will have:
+\begin{align*}
+\mu_{\overbar{x}} =& \mu \\
+\sigma_{\overbar{x}} =& \frac{\sigma} { \sqrt{n}}\\
+\end{align*}
+\[
+P(\overbar{x} < A) = P (Z < \frac{A - \mu_{\overbar{x}}} {\sigma_{\overbar{x}} / \sqrt{n} })
+\]
+
+Discrete data requires $n\cdot p \geq 5$ and $n(1-p) \geq 5$
+
+For proportions, a sample distribution will have:
+\begin{align*}
+p_{\hat{p}} =& p \\
+\sigma_{\hat{p}} =& \sqrt{\frac{p(1-p)} { n}  }\\
+\end{align*}
+
+To find if a population totals less a value (``the Swan Problem"):
+\[
+P\bigg(\sum\limits_{i=1}^{n} x_i < \text{max}\bigg)
+\]
+Divide both sides by $n$:
+\[
+P(\overbar{X} < \text{avg})
+\]
+From CLT:
+\[
+\overbar{X} \sim \mathcal{N}(\mu, \frac{s^2}{n})
+\]
+Then Z-score:
+\[
+P(Z < \frac{ \text{avg} - \mu } { s / \sqrt{n}})
+\]
+
+\subsubsection{Bias}
+In practice $n$ has to relatively much larger like $> 100$.
+
+Recap:
+\begin{tabular}{| c | c | c| }
+\hline
+ & Sample statistic &  Population Parameter \\
+ \hline
+ Mean & $\overbar{x}$ & $\mu$ \\
+ Variance & $s^2$ & $\sigma^2$ \\
+ Correlation & $r$ & $\rho$ \\
+\hline
+& Guess & True, but unknown \\
+\hline
+\end{tabular}
+
+Guesses should be \textit{unbiased} and have \textit{minimum variance}. MVUE (Minimum Variance, Unbiased Estimates).
+\[
+bias(\hat{\theta}) = E(\hat{\theta}) - \theta
+\]
+Unbiased if $bias = 0$ (expected value equals true, not a particular value of $\overbar{x}$). 
+
+For samples, we divide by $n-1$ instead of $n$ to make an unbiased estimator. The guess would otherwise be too low.
+\[
+E(s^2) = \sigma^2
+\]
+
+
+\subsubsection{Confidence Interval - Margin of Error}
+\[
+\text{Margin of error(MoE)} = Z_{\alpha/2} \times \text{standard error} 
+\]
+
+For a 95\% confidence, $Z = 1.96$.
+
+For a given CI = (Lower, Upper):
+\begin{align*}
+\overbar{x} =& (U + L) / 2\\
+\text{or}& \\
+\hat{p} =& (U + L) / 2\\
+\text{MoE} =& (U - L) / 2\\
+\end{align*}
+
+The CI interval is the confidence percentage that the true population mean is within the interval. It does not imply what percentage of the population is outside the interval.
+
+The larger the CI Percentage, the wider it is and the smaller the risk of being incorrect.
+
+Factors affecting the margin of error:
+\begin{itemize}
+\item{data variation $\sigma$. Direct relation}
+\item{sample size $n$. Inverse relation}
+\item{level of confidence, $1-\alpha$. Direct relation}
+\end{itemize}
+
+\subsubsection{Confidence Interval - Mean}
+\[
+Var(\overbar{x}) = \frac {s^2} {n}
+\]
+
+\[
+\overbar{x} \pm 1.96 \frac{s}{\sqrt{n}}
+\]
+\[
+n = \bigg(\frac{1.96s}{\overbar{x}}\bigg)^2
+\]
+$\mu$, the population mean, cannot be determined from the CI. We are only 95\% certain that $\mu$ is in the CI range.
+
+\subsubsection{Confidence Interval - Proportion}
+\[
+\hat{p} = \frac {x}{n}
+\]
+\[
+Var(\hat{p}) = \frac{p(1-p) } {n} \text{ or } \frac{\hat{p}(1-\hat{p}) } {n}
+\]
+\[
+\hat{p} \pm 1.96 \times \sqrt{\frac{\hat{p}(1-\hat{p}) }  {n } } 
+\]
+\begin{align*}
+n =& (\frac{1.96}{0.05})^2\hat{p}(1-{\hat{p}}) \\
+   =& 1536.64*\hat{p}(1-{\hat{p}})
+\end{align*}
+
+Worst case, use $\hat{p} = 0.50$. e.g. 95\% confident, 2\% accuracy, find $n$:
+\[
+n = (\frac{1.96}{0.02})^2(0.5)^2
+\]
+
+
+For small $n$, use Agresti with a different $\hat{p}$:
+\[
+\hat{p} = \frac{x+2} {n+4}
+\]
+
+\subsection{Hypothesis Test - General}
+The purpose of hypothesis testing is to help the researcher reach a conclusion about a population by examining the data
+contained in a sample.
+
+$H_0$ is default position, the status quo. It requires significant evidence to be disproven.
+
+\begin{tabular}{ c  c }
+Hypotheses & Decision Rule \\
+\hline
+$H_0 : \mu = \mu_0$ \\      $H_a : \mu \neq \mu_0$ & If $|t_{stat}| > 1.96$, reject $H_0$ \\
+ & \\
+$H_0 : \mu = \mu_0$ \\ $H_a : \mu < \mu_0$      & If $t_{stat} < -1.64$, reject $H_0$ \\
+ & \\
+$H_0 : \mu = \mu_0$ \\ $H_a : \mu > \mu_0$      & If $t_{stat} > 1.64$, reject $H_0$ \\
+\end{tabular}
+
+We use 1.96 because it is 2.5\% on either side. We use 1.64 because it is 5\% on a single side.
+
+\subsubsection{Hypothesis Test - Mean}
+
+Calculation by hand using a $t$ test:
+\begin{align*}
+t_{stat} =& \frac{ \overbar{x} - \mu_0  } { s / \sqrt{n}  } \\
+\end{align*}
+For small $n$, use $t$ distribution: 
+\begin{align*}
+t_{stat} =& \frac{ \overbar{x} - \mu_0  } { s / \sqrt{n-1}  } \\
+\end{align*}
+
+
+\subsubsection{Hypothesis Test - Proportion}
+\[
+t_{stat} = \frac{(\hat{p} - p_0)}{\sqrt{p_0(1-p_0)/n}}
+\]
+For small $n$, use $t$ distribution ($n-1$).
+
+
+\subsection{Types of Errors}
+\begin{description}
+\item[Type I]the null hypothesis is rejected when it is true
+\item[Type II] the null hypothesis is accepted when it is false
+\end{description}
+$\alpha$ is \textit{level of significance} - probability of making a Type I error. The greater the cost of an error, the smaller $\alpha$ should be.
+$\beta$ is the probability of making a Type II error.
+
+\subsubsection{Comparing Two Sets - General}
+The null hypothesis is always $H_0 : p_1 = p_2$.
+
+ \begin{tabular}{ c  c c }
+Hypotheses & Decision Rule & Stata Diff $(p_1 - p_2)$ \\
+\hline
+$H_0 : p_1 = p_2$ \\      $H_a : p_1 \neq p_2$ & If $|T| > 1.96$, reject $H_0$ & $H_a: \text{ diff } \neq 0$\\
+ & \\
+$H_0 : p_1 = p_2$ \\ $H_a : p_1 < p_2$      & If $T < -1.64$, reject $H_0$ & $H_a: \text{ diff } < 0$\\
+ & \\
+$H_0 : p_1 = p_2$ \\ $H_a : p_1 > p_2$      & If $T > 1.64$, reject $H_0$ & $H_a: \text{ diff } > 0$\\
+\end{tabular}
+
+If the interval is all positive then $\hat{p}_1 > \hat{p}_2$.
+If the interval is all negative then $\hat{p}_1 < \hat{p}_2$.
+If the interval spans 0, then one is not significantly bigger than the other (or cannot be determined). 
+As long as $n > 30$, it doesn't matter if the sample size is different between the random variables.
+
+
+\subsubsection{Comparing Two Proportions}
+\[
+Var(\hat{p}_1 - \hat{p}_2) = \frac{\hat{p}_1(1-\hat{p}_1)}{n_1} + \frac{\hat{p}_2(1-\hat{p}_2)}{n_2} 
+\]
+
+The 95\% confidence interval for $p_1-p_2$ is:
+\[
+(\hat{p}_1 - \hat{p}_2) \pm 1.96 \sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1} + \frac{\hat{p}_2(1-\hat{p}_2)}{n_2}   }
+\]
+
+Decision Rules for Testing Two Proportions:
+\[
+T = \frac{(\hat{p}_1 - \hat{p}_2) }  { \sqrt{ \hat{p}(1-\hat{p}) (\frac{1}{n_1} + \frac{1}{n_2}) }} \text{, where } \hat{p} = \frac{n_1\hat{p}_1 + n_2\hat{p_2} } {n_1 + n_2 }
+\]
+$\hat{p}$ is called the \textit{pooled proportion}.
+
+\subsubsection{Comparing Two Means}
+Requirements:
+\begin{enumerate}
+\item{$\sigma_1$ and $\sigma_2$ are unknown. No assumption made about their equality.}
+\item{The two samples are independent.}
+\item{Both samples are simple random samples.}
+\item{The two samples size are both large (ie. $> 30$) or both populations have normal distributions.}
+\end{enumerate}
+
+A confidence interval for $(\mu_1 - \mu_2 )$ is
+\[
+(\overbar{x}_1 - \overbar{x}_2) \pm 1.96 \sqrt{ \frac{s^2_1 } {n_1 } + \frac{s^2_2 } {n_2 }     }
+\]
+
+\subsubsection{Matched Pairs}
+
+This when there are two samples that are \textbf{not} independent, e.g. Weight Watchers, Before / After or matched, shared characteristics.
+
+Is the data matched or independent?
+
+If we don't take into account the match, the results are wrong.
+
+To account for this, take the difference between $\overbar{X}_1 - \overbar{X}_2$ and then do a hypothesis test on the \textit{difference}. 
+\begin{align*}
+H_0 : & \mu_D = 0 \\
+H_a : & \mu_D > 0 \\
+\end{align*}
+
+\subsubsection{Chi-Square Test - Goodness of Fit}
+
+A class of two tests: \textit{goodness of fit} and \textit{statistical independence}.
+
+Tests several proportions at the same time, aka the multinomial setting.
+
+$k$ categories of interest with $p_1, p_2, ... , p_k$ probabilities that a value is in a particular cell. All $p$'s add up to 1, as usual.
+
+\[
+H_0 : p_1 = a_1, p_2 = a_2, ... , p_k = a_k
+\]
+where $a_1, a_2, ... , a_k$ are the values to be tested.
+
+$H_a$ : at least one $p_i$ is not equal to the specified value.
+
+ \begin{description}
+ \item [O] observed frequency of an outcome, given
+ \item[E] expected frequency of an outcome, calculated
+ \item[$k$]number of different categories
+ \item[$n$]number of trials
+ \item[$s_i$]sample standard deviation
+ \end{description}
+
+Calculate Observed and Expected to see if they are consistent. Known as Chi-Squared Goodness of Fit (GOF) Test.
+
+\[
+e_i = n \cdot p_i
+\]
+
+\[
+\chi^2 = \sum\limits_{\text{all } i} \frac{  (o_i - e_i) ^2} {e_i}
+\]
+Smallest possible value is zero. Smaller $\chi^2$ means $H_0$ is plausible. Larger $\chi^2$ means reject the null. 
+
+Use table to determine cut-off values (determined by degrees of freedom $k-1$). As before, we typically use $\alpha = 5\%$ level of significance.
+
+If $\chi^2 > \chi_{\alpha, k-1}^2$, then reject the null in favor of $H_a$. Something has changed (but we don't know what or which direction).
+
+Requirements:
+\begin{enumerate}
+\item{Data is random}
+\item{Data has frequency counts per category}
+\item{$e_i \geq 5, o_i$ can be anything. Might need to group smaller categories.}
+\end{enumerate}
+
+\subsubsection{Chi-Squared Test of Independence}
+
+aka Two-way Chi-Squared Test.
+
+Tests if $r$ rows and $c$ columns are independent or not. $H_0$ is independent, $H_a$ is dependent.
+
+Look for $P$ value. Again, if $P$ is low, $H_0$ must go.
+
+Need to figure out the probabilities in order to determine $e_i$. Recall, for independent variables:
+\[
+P(A \text{ and } B) = P(B)P(A)
+\]
+
+If $e_{ij} = P(r_i) P(c_j)$ then independent
+
+
+
+% You can even have references
+%\rule{0.3\linewidth}{0.25pt}
+\scriptsize
+\bibliographystyle{abstract}
+\bibliography{refFile}
+\end{multicols*}
+\end{document}
