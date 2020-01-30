@@ -43,55 +43,58 @@
     <!-- End Google Tag Manager (noscript) -->
 
 
-    <form action="" name="myForm">
+    <form action="form.html" name="myForm" method="get">
         Name: <input type="text" name="name">
         <input type="hidden" id="gclid" name="gclid" value="">
         <input type="submit" value="Submit Form" name="btnSubmit">
     </form>
     <script>
-        function readCookie(c_name) {
-            var c_value = document.cookie;
-            var c_start = c_value.indexOf(" " + c_name + "=");
-            if (c_start == -1) {
-                c_start = c_value.indexOf(c_name + "=");
-            }
-            if (c_start == -1) {
-                c_value = null;
-            } else {
-                c_start = c_value.indexOf("=", c_start) + 1;
-                var c_end = c_value.indexOf(";", c_start);
-                if (c_end == -1) {
-                    c_end = c_value.length;
+        function getParam(p) {
+            var match = RegExp('[?&]' + p + '=([^&]*)').exec(window.location.search);
+            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        }
+
+        function getExpiryRecord(value) {
+            var expiryPeriod = 90 * 24 * 60 * 60 * 1000; // 90 day expiry in milliseconds
+
+            var expiryDate = new Date().getTime() + expiryPeriod;
+            return {
+                value: value,
+                expiryDate: expiryDate
+            };
+        }
+
+        function addGclid() {
+            var gclidParam = getParam('gclid');
+            var gclidFormFields = ['gclid_field', 'foobar']; // all possible gclid form field ids here
+            var gclidRecord = null;
+            var currGclidFormField;
+
+            var gclsrcParam = getParam('gclsrc');
+            var isGclsrcValid = !gclsrcParam || gclsrcParam.indexOf('aw') !== -1;
+
+            gclidFormFields.forEach(function (field) {
+                if (document.getElementById(field)) {
+                    currGclidFormField = document.getElementById(field);
                 }
-                c_value = unescape(c_value.substring(c_start, c_end));
+            });
+
+            if (gclidParam && isGclsrcValid) {
+                gclidRecord = getExpiryRecord(gclidParam);
+                localStorage.setItem('gclid', JSON.stringify(gclidRecord));
             }
-            return c_value;
+
+            var gclid = gclidRecord || JSON.parse(localStorage.getItem('gclid'));
+            var isGclidValid = gclid && new Date().getTime() < gclid.expiryDate;
+
+            if (currGclidFormField && isGclidValid) {
+                currGclidFormField.value = gclid.value;
+            }
         }
 
-        window.onload = function () {
-
-            document.getElementById('gclid').value = readCookie('gclid');
-        }
+        window.addEventListener('load', addGclid);
     </script>
 
-    <script type="text/javascript">
-        function setCookie(a, d, b) {
-            var c = new Date;
-            c.setTime(c.getTime() + 864E5 * b);
-            b = "; expires=" + c.toGMTString();
-            document.cookie = a + "=" + d + b
-        }
-
-        function getParam(a) {
-            return (a = RegExp("[?&]" + a + "=([^&]*)").exec(window.location.search)) && decodeURIComponent(a[1]
-                .replace(/\+/g, " "))
-        }
-        var gclid = getParam("gclid");
-        if (gclid) {
-            var gclsrc = getParam("gclsrc");
-            (!gclsrc || -1 !== gclsrc.indexOf("aw")) && setCookie("gclid", gclid, 90)
-        };
-    </script>
 
 </body>
 
