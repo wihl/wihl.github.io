@@ -50,12 +50,9 @@
 <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
 
 <p>Using GTM</p>
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p><a href="form.html">load the form</a></p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+
 
 <p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
 
@@ -84,6 +81,22 @@ $ git checkout gh-pages
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+    <script type="text/javascript">
+      function setCookie(a, d, b) {
+          var c = new Date;
+          c.setTime(c.getTime() + 864E5 * b);
+          b = "; expires=" + c.toGMTString();
+          document.cookie = a + "=" + d + b
+      }
+  
+      function getParam(a) {
+          return (a = RegExp("[?&]" + a + "=([^&]*)").exec(window.location.search)) && decodeURIComponent(a[1].replace(/\+/g, " "))
+      }
+      var gclid = getParam("gclid");
+      if (gclid) {
+          var gclsrc = getParam("gclsrc");
+          (!gclsrc || -1 !== gclsrc.indexOf("aw")) && setCookie("gclid", gclid, 90)
+      };
+  </script>
   </body>
 </html>
